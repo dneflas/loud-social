@@ -1,5 +1,5 @@
 # LOUD Social 📣
 
 ## Description
-A MERN stack social communication board for a membership based community.
+In developement, a MERN stack social communication board for a membership based community.
 
