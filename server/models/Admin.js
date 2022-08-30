@@ -1,0 +1,62 @@
+const { Schema, model } = require("mongoose");
+const bcrypt = require("bcrypt");
+
+const adminSchema = new Schema(
+  {
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      match: [/.+@.+\..+/, "Must match an email address!"],
+    },
+    password: {
+      type: String,
+      required: true,
+      minLength: 6,
+    },
+    posts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Post",
+      },
+    ],
+    favorites: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Post",
+      },
+    ],
+  },
+  {
+    toJSON: {
+      virtuals: true,
+    },
+  }
+);
+
+adminSchema.pre("save", async function (next) {
+  if (this.isNew || this.isModified) {
+    const saltRounds = 10;
+    this.password = await bcrypt.hash(this.password, saltRounds);
+  }
+  next();
+});
+
+adminSchema.methods.isPasswordCorrect = async function (password) {
+  return bcrypt.compare(password, this.password);
+};
+
+adminSchema.virtual("postCount").get(function () {
+  return this.posts.length;
+});
+
+const Admin = model("Admin", userSchema);
+
+module.exports = Admin;
