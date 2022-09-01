@@ -21,6 +21,10 @@ const userSchema = new Schema(
       required: true,
       minLength: 6,
     },
+    admin: {
+      type: Boolean,
+      default: false,
+    },
     posts: [
       {
         type: Schema.Types.ObjectId,
