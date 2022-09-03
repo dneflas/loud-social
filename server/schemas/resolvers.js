@@ -133,6 +133,33 @@ const resolvers = {
       }
       throw new AuthenticationError("You need to be logged in!");
     },
+    // updatePost(postId: ID! postTitle: String, postBody: String): Post
+    updatePost: async (parent, { postId, ...args }, context) => {
+      if (context.user) {
+        return await Post.findOneAndUpdate(
+          { _id: postId },
+          { ...args },
+          {
+            new: true,
+            runValidators: true,
+          }
+        );
+      }
+      throw new AuthenticationError("You need to be logged in!");
+    },
+    // deletePost(postId: ID!): User
+    deletePost: async (parent, { postId }, context) => {
+      if (context.user) {
+        const deletedPost = await Post.findOneAndDelete({ _id: postId });
+
+        return await User.findOneAndUpdate(
+          { username: deletedPost.author },
+          { $pull: { posts: postId } },
+          { new: true, runValidators: true }
+        );
+      }
+      throw new AuthenticationError("You need to be logged in!");
+    },
     // addComment(postId: ID!, commentBody: String!): Post
     addComment: async (parent, { postId, commentBody }, context) => {
       if (context.user) {
