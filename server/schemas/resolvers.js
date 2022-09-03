@@ -55,8 +55,15 @@ const resolvers = {
       }
       throw new AuthenticationError("Not logged in");
     },
+    //    allPosts: [Post]
+    allPosts: async (parent, args, context) => {
+      if (context.user) {
+        return Post.find().sort({ createdAt: -1 });
+      }
+      throw new AuthenticationError("Not logged in");
+    },
     // posts(username: String): [Post]
-    posts: async (parent, { username }, context) => {
+    userPosts: async (parent, { username }, context) => {
       const params = username ? { username } : {};
       if (context.user) {
         return Post.find(params).sort({ createdAt: -1 });
@@ -96,6 +103,16 @@ const resolvers = {
 
       return { token, user };
     },
+    // addAdmin(email: String!, username: String!, password: String!): Auth
+    addAdmin: async (parent, args, context) => {
+      if (context.user.admin) {
+        return await User.create({
+          ...args,
+          admin: true,
+        });
+      }
+      throw new AuthenticationError("Incorrect credentials");
+    },
     // addPost(postTitle: String!, postBody: String!): Post
     addPost: async (parent, { postTitle, postBody }, context) => {
       console.log(context.user.username);
@@ -104,6 +121,7 @@ const resolvers = {
           postTitle,
           postBody,
           author: context.user.username,
+          adminPost: context.user.admin,
         });
 
         await User.findOneAndUpdate(

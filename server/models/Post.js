@@ -21,6 +21,7 @@ const postSchema = new Schema(
     },
     adminPost: {
       type: Boolean,
+      default: false,
     },
     createdAt: {
       type: Date,

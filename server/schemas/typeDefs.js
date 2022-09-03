@@ -42,12 +42,14 @@ const typeDefs = gql`
     users: [User]
     user(username: String!): User
     adminPosts(adminPost: Boolean): [Post]
-    posts(username: String): [Post]
+    allPosts: [Post]
+    userPosts(username: String): [Post]
     post(_id: ID!): Post
   }
   type Mutation {
     login(email: String!, password: String!): Auth
     addUser(email: String!, username: String!, password: String!): Auth
+    addAdmin(email: String!, username: String!, password: String!): User
     addPost(postTitle: String!, postBody: String!): Post
     addComment(postId: ID!, commentBody: String!): Post
     addReaction(postId: ID!, reaction: Boolean): Post
