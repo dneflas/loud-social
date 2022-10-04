@@ -2,7 +2,7 @@ const { Schema } = require("mongoose");
 
 const reactionSchema = new Schema({
   reaction: {
-    type: Boolean,
+    type: String,
     required: true,
   },
   username: {
