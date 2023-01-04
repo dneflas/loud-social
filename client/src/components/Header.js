@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import Auth from "../utils/auth";
 
-const Header = () => {
-  const [currentPage, setCurrentPage] = useState("");
+const Header = ({ setCurrentPage }) => {
   const loggedIn = Auth.loggedIn();
   return (
     <header>
