@@ -96,6 +96,21 @@ db.once("open", async () => {
     );
   }
 
+  // user favorites Data
+
+  for (let i = 0; i < 75; i++) {
+    const randomUserIndex = Math.floor(Math.random() * createdUsers.length);
+    const { _id: userId } = createdUsers[randomUserIndex]._id;
+    const randomPostIndex = Math.floor(Math.random() * createdPosts.length);
+    const { _id: postId } = createdPosts[randomPostIndex]._id;
+
+    await User.findByIdAndUpdate(
+      { _id: userId },
+      { $addToSet: { favorites: { _id: postId } } },
+      { runValidators: true }
+    );
+  }
+
   console.log("Database seeded! 🌱");
   process.exit(0);
 });
